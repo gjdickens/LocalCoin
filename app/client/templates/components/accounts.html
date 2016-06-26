@@ -1,0 +1,65 @@
+<template name="components_accounts">
+    <div class="panel panel-default panel-dapp">
+        <div class="panel-heading">
+            {{i18n 'dapp.components.accounts.header'}}
+        </div>
+        <div class="panel-body">
+            <p>{{i18n 'dapp.components.accounts.description'}}</p>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <td>Delete</td>
+                        <td>{{i18n 'dapp.app.headers.address'}}</td>
+                        <td>{{i18n 'dapp.app.headers.balance'}}</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each accounts}}
+                    <tr>
+                        <td><button class="delete">X</button></td>
+
+                        <td>
+                            <input type="text" value="{{address}}" class="web3_address"/>
+                        </td>
+                        <td>{{fromWei balance 'ether'}} ether</td>
+                    </tr>
+                    {{/each}}
+                    <tr>
+                        <td><button class="add">+</button></td>
+
+                        <td>
+                            <input type="text" class="web3_address"/>
+                        </td>
+                        <td>{{fromWei balance 'ether'}} ether</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <br><br>
+
+        <h2>{{{i18n "wallet.tokens.title"}}}</h2>
+
+        <p>
+            {{{i18n "wallet.tokens.description"}}}
+        </p>
+
+        <div class="dapp-clear-fix"></div>
+
+        <div class="wallet-box-list">
+        {{#each tokens}}
+            {{> components_tokenBox}}
+        {{/each}}
+        </div>
+
+        <button class="wallet-box add-token">
+            <div class="account-pattern">
+                +
+            </div>
+            <h3>{{i18n "wallet.app.buttons.addToken"}}</h3>
+        </button>
+
+    </div>
+</template>
