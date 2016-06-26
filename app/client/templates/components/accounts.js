@@ -106,11 +106,21 @@ Template['components_accounts'].events({
 // template handlebar helper methods
 Template['components_accounts'].helpers({
 
+	/**
+	@method (tokens)
+	*/
+	'tokens': function(){
+			return Tokens.find({}, {sort:{symbol:1}});
+	},
+
+
+
 /**
 Function to add tokens
 
 @method addToken
 */
+
 'addToken': function(e) {
 
     var address = $('.modals-add-token input[name="address"]').hasClass('dapp-error') ?
