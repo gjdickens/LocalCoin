@@ -27,7 +27,6 @@ matb33:collection-hooks
 raix:handlebar-helpers
 chuangbo:cookie
 markdown
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -43,3 +42,5 @@ spacebars
 check
 silentcicero:solc
 frozeman:persistent-minimongo2
+standard-minifier-css
+standard-minifier-js
