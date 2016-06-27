@@ -44,3 +44,8 @@ silentcicero:solc
 frozeman:persistent-minimongo2
 standard-minifier-css
 standard-minifier-js
+ethereum:dapp-styles
+frozeman:animation-helper
+frozeman:global-notifications
+frozeman:inline-form
+hashanp:geopattern
