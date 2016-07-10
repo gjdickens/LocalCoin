@@ -1,16 +1,23 @@
+
 <template name="layout_main">
-    <!-- The dynamic page header -->
-    {{> yield region="header"}}
 
-	<!-- content -->
-	<main class="container-fluid">
-		{{> yield}}
-	</main>
+	<!-- <div class="dapp-grid"></div> -->
 
-    <!-- The dynamic page footer -->
-    {{> yield region="footer"}}
+	<header class="dapp-header">
+		{{> Template.dynamic template=header}}
+	</header>
 
-    <!-- Modal placeholder -->
-    {{> dapp_modalPlaceholder}}
+	<div class="dapp-flex-content">
 
+		<!-- content -->
+		<main class="container-fluid">
+			{{> Template.dynamic template=main data=data}}
+		</main>
+
+
+	</div>
+
+	{{> dapp_modalPlaceholder}}
+
+	{{> GlobalNotifications}}
 </template>

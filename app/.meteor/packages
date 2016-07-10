@@ -6,11 +6,9 @@
 
 reactive-var
 less
-iron:router
 fastclick
 tap:i18n
 3stack:bignumber
-zimme:iron-router-active
 yasinuslu:blaze-meta
 numeral:numeral
 ethereum:web3
@@ -49,3 +47,12 @@ frozeman:animation-helper
 frozeman:global-notifications
 frozeman:inline-form
 hashanp:geopattern
+kadira:flow-router
+kadira:blaze-layout
+arillo:flow-router-helpers
+underscore
+http
+agnito:simptip
+sacha:spin
+accounts-password
+accounts-ui

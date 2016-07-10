@@ -1,0 +1,23 @@
+<template name="components_tokens">
+    <div class="panel panel-default panel-dapp">
+
+        <h2>{{{i18n "wallet.tokens.title"}}}</h2>
+
+        <p>
+            {{{i18n "wallet.tokens.description"}}}
+        </p>
+
+        <div class="dapp-clear-fix"></div>
+
+        <div class="wallet-box-list">
+        {{#each tokens}}
+            {{> components_tokenBox}}
+        {{/each}}
+        </div>
+
+        <button class="add-token">
+            <h3>{{i18n "wallet.app.buttons.addToken"}}</h3>
+        </button>
+</div>
+
+</template>

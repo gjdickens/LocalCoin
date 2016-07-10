@@ -10,165 +10,23 @@ The Helpers class containing helper functions
 @class Helpers
 @constructor
 **/
-
 Helpers = {};
-
 
 /**
 Reruns functions reactively, based on an interval. Use it like so:
 
     Helpers.rerun['10s'].tick();
 
-@method (rerun)
-**/
 
+@method rerun
+**/
 Helpers.rerun = {
-    '10s': new ReactiveTimer(10)
-};
-
-
-
-/**
-Formats a timestamp to any format given.
-
-    Helpers.formatTime(myTime, "YYYY-MM-DD")
-
-@method (formatTime)
-@param {String} time         The timstamp, can be string or unix format
-@param {String} format       the format string, can also be "iso", to format to ISO string, or "fromnow"
-@return {String} The formated time
-**/
-
-Helpers.formatTime = function(time, format) { //parameters
-
-    // make sure not existing values are not Spacebars.kw
-    if(format instanceof Spacebars.kw)
-        format = null;
-
-    if(time) {
-
-        if(_.isString(format) && !_.isEmpty(format)) {
-
-            if(format.toLowerCase() === 'iso')
-                time = Helpers.moment(time).toISOString();
-            else if(format.toLowerCase() === 'fromnow') {
-                // make reactive updating
-                Helpers.rerun['10s'].tick();
-                time = Helpers.moment(time).fromNow();
-            } else
-                time = Helpers.moment(time).format(format);
-        }
-
-        return time;
-
-    } else
-        return '';
-};
-
-/**
-Formats a given transactions balance
-
-    Helpers.formatTransactionBalance(tx)
-
-@method formatTransactionBalance
-@param {String} value  the value to format
-@param {Object} exchangeRates  the exchange rates to use
-@param {String} unit  the unit to format to
-@return {String} The formated value
-**/
-Helpers.formatTransactionBalance = function(value, exchangeRates, unit) {
-
-    // make sure not existing values are not Spacebars.kw
-    if(unit instanceof Spacebars.kw)
-        unit = null;
-
-    var unit = unit || EthTools.getUnit(),
-        format = '0,0.00';
-
-    if((unit === 'usd' || unit === 'eur' || unit === 'btc') &&
-       exchangeRates && exchangeRates[unit]) {
-
-        if(unit === 'btc')
-            format += '[000000]';
-        else
-            format += '[0]';
-
-        var price = new BigNumber(String(web3.fromWei(value, 'ether')), 10).times(exchangeRates[unit].price);
-        return EthTools.formatNumber(price, format) + ' '+ unit.toUpperCase();
-    } else {
-        return EthTools.formatBalance(value, format + '[0000000000000000] UNIT');
-    }
+    '10s': new ReactiveTimer(10),
+    '1s': new ReactiveTimer(1)
 };
 
 
 /**
-Formats an input and prepares it to be a template
-
-    Helpers.createTemplateDataFromInput(abiFunctionInput);
-
-@method createTemplateDataFromInput
-@param {object} input           The input object, out of an ABI
-@return {object} input          The input object with added variables to make it into a template
-**/
-Helpers.createTemplateDataFromInput = function (input, key){
-    input = _.clone(input);
-
-    input.index = key;
-    input.typeShort = input.type.match(/[a-z]+/i);
-    input.typeShort = input.typeShort[0];
-    input.bits = input.type.replace(input.typeShort, '');
-    input.displayName = input.name
-        .replace(/([A-Z])/g, ' $1')
-        .replace(/([\-\_])/g, '&thinsp;<span class="punctuation">$1</span>&thinsp;');
-
-    if(input.type.indexOf('[') === -1 &&
-       (input.typeShort === 'string' ||
-        input.typeShort === 'uint' ||
-        input.typeShort == 'int' ||
-        input.typeShort == 'address' ||
-        input.typeShort == 'bool' ||
-        input.typeShort == 'bytes')) {
-
-        input.template =  'elements_input_'+ input.typeShort;
-    } else {
-        input.template =  'elements_input_json';
-    }
-
-    return input;
-};
-
-/**
-Adds the input value from a form field to the inputs array
-
-@method addInputValue
-@param {object} inputs          The current inputs
-@param {object} currentInput   The current input
-@return {Array} array of parameter values
-**/
-Helpers.addInputValue = function (inputs, currentInput, formField){
-
-    return _.map(inputs, function(input) {
-            var value = _.isUndefined(input.value) ? '' : input.value;
-
-            if(currentInput.name === input.name &&
-               currentInput.type === input.type &&
-               currentInput.index === input.index ) {
-
-                if(input.type.indexOf('[') !== -1) {
-                    try {
-                        value = JSON.parse(formField.value);
-                    } catch(e) {
-                        value = [];
-                    }
-
-                // force 0x at the start
-                } else if(!_.isEmpty(formField.value) &&
-                   (input.typeShort === 'bytes' ||
-                    input.typeShort === 'address')) {
-                    value = '0x'+ formField.value.replace('0x','');
-
-                // bool
-          /**
 Sort method for accounts and wallets to sort by balance
 
 @method sortByBalance
@@ -213,7 +71,6 @@ Format a number based on decimal numbers
 @param {Number} number
 @param {Number} decimals
 */
-
 Helpers.formatNumberByDecimals = function(number, decimals){
 
     var numberFormat = '0,0.';
@@ -279,7 +136,7 @@ Helpers.showNotification = function(i18nText, values, callback) {
             // icon: 'http://cdn.sstatic.net/stackexchange/img/logos/so/so-icon.png',
             body: TAPi18n.__(i18nText +'.text', values),
         });
-
+        
         if(_.isFunction(callback))
             notification.onclick = callback;
     }
@@ -323,7 +180,7 @@ Gets the docuement matching the given addess from the EthAccounts or Wallets col
 */
 Helpers.getAccountNameByAddress = function(address) {
     var doc = Helpers.getAccountByAddress(address.toLowerCase());
-    return doc ? doc.name : address;
+    return doc ? doc.name : address; 
 };
 
 /**
@@ -343,7 +200,149 @@ Helpers.moment = function(time){
     else
         return moment(time);
 
-};      } else if(input.typeShort === 'bool') {
+};
+
+
+/**
+Formats a timestamp to any format given.
+
+    Helpers.formatTime(myTime, "YYYY-MM-DD")
+
+@method formatTime
+@param {String} time         The timestamp, can be string or unix format
+@param {String} format       the format string, can also be "iso", to format to ISO string, or "fromnow"
+@return {String} The formated time
+**/
+Helpers.formatTime = function(time, format) { //parameters
+    
+    // make sure not existing values are not Spacebars.kw
+    if(format instanceof Spacebars.kw)
+        format = null;
+
+    if(time) {
+
+        if(_.isString(format) && !_.isEmpty(format)) {
+
+            if(format.toLowerCase() === 'iso')
+                time = Helpers.moment(time).toISOString();
+            else if(format.toLowerCase() === 'fromnow') {
+                // make reactive updating
+                Helpers.rerun['10s'].tick();
+                time = Helpers.moment(time).fromNow();
+            } else
+                time = Helpers.moment(time).format(format);
+        }
+
+        return time;
+
+    } else
+        return '';
+};
+
+/**
+Formats a given transactions balance
+
+    Helpers.formatTransactionBalance(tx)
+
+@method formatTransactionBalance
+@param {String} value  the value to format
+@param {Object} exchangeRates  the exchange rates to use
+@param {String} unit  the unit to format to
+@return {String} The formated value
+**/
+Helpers.formatTransactionBalance = function(value, exchangeRates, unit) {
+
+    // make sure not existing values are not Spacebars.kw
+    if(unit instanceof Spacebars.kw)
+        unit = null;
+
+    var unit = unit || EthTools.getUnit(),
+        format = '0,0.00';
+
+    if((unit === 'usd' || unit === 'eur' || unit === 'btc') &&
+       exchangeRates && exchangeRates[unit]) {
+
+        if(unit === 'btc')
+            format += '[000000]';
+        else 
+            format += '[0]';
+        
+        var price = new BigNumber(String(web3.fromWei(value, 'ether')), 10).times(exchangeRates[unit].price);
+        return EthTools.formatNumber(price, format) + ' '+ unit.toUpperCase();
+    } else {
+        return EthTools.formatBalance(value, format + '[0000000000000000] UNIT');
+    }
+};
+
+
+/**
+Formats an input and prepares it to be a template 
+    
+    Helpers.createTemplateDataFromInput(abiFunctionInput);
+
+@method createTemplateDataFromInput
+@param {object} input           The input object, out of an ABI
+@return {object} input          The input object with added variables to make it into a template
+**/
+Helpers.createTemplateDataFromInput = function (input, key){
+    input = _.clone(input);
+
+    input.index = key;
+    input.typeShort = input.type.match(/[a-z]+/i);
+    input.typeShort = input.typeShort[0];
+    input.bits = input.type.replace(input.typeShort, '');
+    input.displayName = input.name
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/([\-\_])/g, '&thinsp;<span class="punctuation">$1</span>&thinsp;');
+        
+    if(input.type.indexOf('[') === -1 &&
+       (input.typeShort === 'string' ||
+        input.typeShort === 'uint' ||
+        input.typeShort == 'int' ||
+        input.typeShort == 'address' ||
+        input.typeShort == 'bool' ||
+        input.typeShort == 'bytes')) {
+
+        input.template =  'elements_input_'+ input.typeShort;
+    } else {
+        input.template =  'elements_input_json';
+    }
+
+    return input;    
+};
+
+/**
+Adds the input value from a form field to the inputs array
+    
+@method addInputValue
+@param {object} inputs          The current inputs
+@param {object} currentInput   The current input
+@return {Array} array of parameter values
+**/
+Helpers.addInputValue = function (inputs, currentInput, formField){
+
+    return _.map(inputs, function(input) {
+            var value = _.isUndefined(input.value) ? '' : input.value;
+
+            if(currentInput.name === input.name &&
+               currentInput.type === input.type && 
+               currentInput.index === input.index ) {
+
+                if(input.type.indexOf('[') !== -1) {
+                    try {
+                        value = JSON.parse(formField.value);
+                    } catch(e) {
+                        value = [];
+                    }
+
+                // force 0x at the start
+                } else if(!_.isEmpty(formField.value) &&
+                   (input.typeShort === 'bytes' ||
+                    input.typeShort === 'address')) {
+                    value = '0x'+ formField.value.replace('0x','');
+
+                // bool
+                } else if(input.typeShort === 'bool') {
                     value = !!formField.checked;
                 } else {
                     value = formField.value || '';
@@ -364,13 +363,13 @@ Takes a camelcase and shows it with spaces
 @return {string} sentence    The same name, sanitized, with spaces
 **/
 Helpers.toSentence = function (inputString, noHTML) {
-    if (typeof inputString == 'undefined')
+    if (typeof inputString == 'undefined') 
       return false;
     else {
     	inputString = inputString.replace(/[^a-zA-Z0-9_]/g, '');
       if (noHTML === true) // only consider explicit true
         return inputString.replace(/([A-Z]+|[0-9]+)/g, ' $1').trim();
-      else
+      else 
         return inputString.replace(/([A-Z]+|[0-9]+)/g, ' $1').trim().replace(/([\_])/g, '<span class="dapp-punctuation">$1</span>');
     }
 }
@@ -380,7 +379,7 @@ Helpers.toSentence = function (inputString, noHTML) {
 Returns true if Main is the current network.
 
 @method isOnMainNetwork
-@return {Bool}
+@return {Bool} 
 **/
 Helpers.isOnMainNetwork = function () {
     return Session.get('network') == 'main';

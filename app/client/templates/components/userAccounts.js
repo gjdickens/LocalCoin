@@ -10,19 +10,56 @@ The accounts template
 @class [template] components_accounts
 @constructor
 */
+/**
+Function to add tokens
+
+@method addToken
+*/
+var addAccount = function(e) {
+
+		var address = this.$('input[name="address"]').val(),
+
+		address = address.toLowerCase();
+
+		if(web3.isAddress(address)) {
+				userAccounts.insert({
+						address: address,
+						user: Meteor.userId()
+				});
+
+				console.log(address);
+		}
+		else {
+			 console.log("Did not insert");
+				};
+		}
+
+
+
 
 
 // when the template is rendered
-Template["components_accounts"].onRendered(function(){
+Template["components_userAccounts"].onRendered(function(){
 });
 
 // template events
-Template['components_accounts'].events({
+Template['components_userAccounts'].events({
+
+	/**
+	Click Add Token
+
+	@event click a.create.account
+	*/
+	'click .dapp-block-button': function(e){
+			e.preventDefault();
+
+			addAccount();
+	}
 
 });
 
 // template handlebar helper methods
-Template['components_accounts'].helpers({
+Template['components_userAccounts'].helpers({
 
 	/**
 	@method (tokens)
@@ -65,6 +102,10 @@ Template['components_accounts'].helpers({
 
 	'accounts': function(){
 		return EthAccounts.find({});
+	},
+
+	'userAccounts': function () {
+		return userAccounts.find({});
 	},
 
 	'click .delete': function(){

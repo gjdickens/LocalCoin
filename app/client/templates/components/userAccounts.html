@@ -1,4 +1,4 @@
-<template name="components_accounts">
+<template name="components_userAccounts">
     <div class="panel panel-default panel-dapp">
         <div class="panel-heading">
             {{i18n 'dapp.components.accounts.header'}}
@@ -30,8 +30,43 @@
 
                     </tr>
                     {{/each}}
+
+                    <tr>
+                      <td>
+                          <input type="text" placeholder="Link address here" class="web3_address" name="address"/>
+                      </td>
+                      <td>
+                        <button class="dapp-block-button">Add</button>
+                      </td>
+                    </tr>
+
                 </tbody>
             </table>
+          </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <td>{{i18n 'dapp.app.headers.address'}}</td>
+                            <td>{{i18n 'dapp.app.headers.balance'}}</td>
+                            <td>Token Balance</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each userAccounts}}
+                        <tr>
+                          <td>
+                                <input type="text" value="{{address}}" class="web3_address"/>
+                          </td>
+
+                          <td>{{fromWei balance 'ether'}} ether
+                          </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+
         </div>
 </div>
 

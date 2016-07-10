@@ -25,5 +25,4 @@ new PersistentMinimongo2(Events);
 Tokens = new Mongo.Collection('tokens', {connection: null});
 new PersistentMinimongo2(Tokens);
 
-MyCollection = new Mongo.Collection('mydb', {connection: null});
-new PersistentMinimongo2(MyCollection);
+Meteor.subscribe('userAccounts');
